@@ -23,7 +23,7 @@ public class ApiGatewayController {
 
         var method = getHttpMethod(request);
 
-        ResponseEntity<?> response = switch (method) {
+        return switch (method) {
             case GET, TRACE -> proxy.uri(apiUri).get();
             case HEAD -> proxy.uri(apiUri).head();
             case POST -> proxy.uri(apiUri).post();
@@ -32,7 +32,6 @@ public class ApiGatewayController {
             case DELETE -> proxy.uri(apiUri).delete();
             case OPTIONS -> proxy.uri(apiUri).options();
         };
-        return response;
     }
 
     private static HttpMethod getHttpMethod(HttpServletRequest request) {

@@ -1,4 +1,4 @@
-package dk.kvalitetsit.itukt.auth.configuration;
+package dk.kvalitetsit.itukt.auth.gateway;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +10,12 @@ import java.util.List;
 
 @Configuration
 public class ApiGatewayConfiguration {
-    private List<String> allowedOrigins = List.of("http://localhost");
+    private List<String> allowedOrigins = List.of("*");
 
     @Bean
     public CorsFilter corsFilter() {
         var corsConfig = new CorsConfiguration();
-        corsConfig.setAllowCredentials(true);
+//        corsConfig.setAllowCredentials(true);
         allowedOrigins.forEach(corsConfig::addAllowedOrigin);
         corsConfig.addAllowedHeader("*");
         corsConfig.addAllowedMethod("*");
