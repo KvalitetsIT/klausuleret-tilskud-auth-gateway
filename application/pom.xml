@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>dk.kvalitetsit.klausuleret-tilskud-valideringskomponent</groupId>
+        <artifactId>klausuleret-tilskud-auth-gateway</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>application</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>dk.kvalitetsit.klausuleret-tilskud-valideringskomponent</groupId>
+            <artifactId>gateway</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <classifier>exec</classifier>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                            <Class-Path>./lib/</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>kvalitetsit/klausuleret-tilskud-auth-gateway</name>
+                            <build>
+                                <tags>
+                                    <tag>latest</tag>
+                                    <tag>dev</tag>
+                                    <tag>${git.commit.id}</tag>
+                                </tags>
+                                <dockerFileDir>${basedir}/docker</dockerFileDir>
+                                <assembly>
+                                    <inline>
+                                        <files>
+                                            <file>
+                                                <source>${project.build.directory}/application-exec.jar</source>
+                                            </file>
+                                        </files>
+                                        <fileSets>
+                                            <fileSet>
+                                                <includes>
+                                                    <include>application.cdx.json</include>
+                                                </includes>
+                                                <directory>target/classes/META-INF/sbom/</directory>
+                                                <outputDirectory>/</outputDirectory>
+                                            </fileSet>
+                                        </fileSets>
+                                    </inline>
+                                    <descriptorRef>artifact</descriptorRef>
+                                </assembly>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
