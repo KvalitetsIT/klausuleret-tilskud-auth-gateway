@@ -120,6 +120,12 @@
                         <goals>
                             <goal>makeAggregateBom</goal>
                         </goals>
+                        <!-- Apparently this is not the default location when using spring 2.x -->
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}/META-INF/sbom</outputDirectory>
+                            <outputName>application.cdx</outputName>
+                            <outputFormat>json</outputFormat>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
