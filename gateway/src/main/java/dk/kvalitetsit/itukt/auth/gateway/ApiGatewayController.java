@@ -2,6 +2,7 @@ package dk.kvalitetsit.itukt.auth.gateway;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.mvc.ProxyExchange;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class ApiGatewayController {
     private final Logger logger = LoggerFactory.getLogger(ApiGatewayController.class);
-    private String apiUrl = "http://localhost:8082";
+
+    @Value("${ITUKT_GATEWAY_API_URL}")
+    private String apiUrl;
 
     @RequestMapping("/api/**")
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {

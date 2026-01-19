@@ -15,7 +15,6 @@ COPY config/logback.xml logback-spring.xml
 COPY /maven/application-exec.jar application.jar
 
 EXPOSE 8080
-EXPOSE 8081
 
 USER appuser
 ENTRYPOINT ["/home/appuser/entrypoint.sh"]

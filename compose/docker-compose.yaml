@@ -1,0 +1,11 @@
+services:
+  gateway:
+    image: kvalitetsit/klausuleret-tilskud-auth-gateway:latest
+    environment:
+      - ITUKT_GATEWAY_API_URL=http://host.docker.internal:8080
+      - JVM_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - 8082:8080
+      - 5006:5005
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
