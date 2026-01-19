@@ -9,7 +9,7 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.List;
 
 @Configuration
-public class ApiGatewayConfiguration {
+public class GatewayBeanRegistration {
     private List<String> allowedOrigins = List.of("*");
 
     @Bean
