@@ -8,6 +8,7 @@
     <modules>
         <module>application</module>
         <module>gateway</module>
+        <module>integrationtest</module>
     </modules>
 
     <groupId>dk.kvalitetsit.klausuleret-tilskud-auth-gateway</groupId>
@@ -46,11 +47,64 @@
             </dependency>
 
             <dependency>
+                <groupId>dk.kvalitetsit.klausuleret-tilskud-auth-gateway</groupId>
+                <artifactId>application</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>2021.0.8</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- Test dependencies - test containers -->
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>mockserver</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>2.0.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.21.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mock-server</groupId>
+                <artifactId>mockserver</artifactId>
+                <version>3.12</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mock-server</groupId>
+                <artifactId>mockserver-client-java</artifactId>
+                <version>5.15.0</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.gsonfire</groupId>
+                <artifactId>gson-fire</artifactId>
+                <version>1.9.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>1.21.4</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
