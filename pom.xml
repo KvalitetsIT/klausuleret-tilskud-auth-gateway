@@ -10,7 +10,7 @@
         <module>gateway</module>
     </modules>
 
-    <groupId>dk.kvalitetsit.klausuleret-tilskud-valideringskomponent</groupId>
+    <groupId>dk.kvalitetsit.klausuleret-tilskud-auth-gateway</groupId>
     <artifactId>klausuleret-tilskud-auth-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
@@ -40,7 +40,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>dk.kvalitetsit.klausuleret-tilskud-valideringskomponent</groupId>
+                <groupId>dk.kvalitetsit.klausuleret-tilskud-auth-gateway</groupId>
                 <artifactId>gateway</artifactId>
                 <version>${project.version}</version>
             </dependency>
