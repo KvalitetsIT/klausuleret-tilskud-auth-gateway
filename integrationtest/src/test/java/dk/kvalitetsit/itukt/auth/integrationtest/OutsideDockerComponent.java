@@ -1,17 +1,23 @@
 package dk.kvalitetsit.itukt.auth.integrationtest;
 
 import dk.kvalitetsit.itukt.auth.Application;
+import org.slf4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Properties;
 
 final class OutsideDockerComponent implements Component {
+    private final InDockerComponent apiMock;
     private ConfigurableApplicationContext app;
 
-    private static Properties getProperties() {
+    OutsideDockerComponent(Logger logger) {
+        apiMock = new InDockerComponent(logger, "api-mock", 1080);
+    }
+
+    private Properties getProperties() {
         Properties properties = new Properties();
-        properties.setProperty("itukt.gateway.api.url", "test");
+        properties.setProperty("itukt.gateway.api.url", String.format("http://%s:%s", apiMock.getHost(), apiMock.getPort()));
         properties.setProperty("itukt.gateway.oiosaml.servlet.entityid", "test");
         properties.setProperty("itukt.gateway.oiosaml.servlet.baseurl", "test");
         properties.setProperty("itukt.gateway.oiosaml.servlet.keystore.location", "NADM_Test_new.p12");
@@ -24,6 +30,7 @@ final class OutsideDockerComponent implements Component {
 
     @Override
     public void start() {
+        apiMock.start();
         System.getProperties().putAll(getProperties());
         app = SpringApplication.run(Application.class);
     }
@@ -33,6 +40,7 @@ final class OutsideDockerComponent implements Component {
         if (app != null) {
             app.close();
         }
+        apiMock.stop();
     }
 
     @Override
@@ -43,6 +51,11 @@ final class OutsideDockerComponent implements Component {
     @Override
     public Integer getPort() {
         return 8080;
+    }
+
+    @Override
+    public void withSpringProfile(String profile) {
+        System.setProperty("spring.profiles.active", profile);
     }
 }
 

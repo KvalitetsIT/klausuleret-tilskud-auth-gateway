@@ -1,9 +1,6 @@
 package dk.kvalitetsit.itukt.auth.integrationtest;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +17,13 @@ public abstract class BaseTest {
     @BeforeAll
     void setupApp() {
         boolean runInDocker = Boolean.getBoolean("runInDocker");
-        component = runInDocker ? new InDockerComponent(logger) : new OutsideDockerComponent();
+        component = runInDocker ? new InDockerComponent(logger, "gateway", 8080) : new OutsideDockerComponent(logger);
+        if (!withOioSaml()) {
+            component.withSpringProfile("without-oiosaml");
+        }
 
         logger.info("Starting component");
+        component.start();
     }
 
     @AfterAll
@@ -37,4 +38,6 @@ public abstract class BaseTest {
         var projectRoot = Paths.get(testWorkingDir).toAbsolutePath().normalize().getParent().toFile();
         return new File(projectRoot, "compose/" + fileName);
     }
+
+    protected abstract boolean withOioSaml();
 }

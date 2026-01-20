@@ -1,8 +1,17 @@
 services:
+  api-mock:
+    image: mockserver/mockserver:latest
+    ports:
+      - 1080:1080
+    environment:
+      - MOCKSERVER_INITIALIZATION_JSON_PATH=/mock/api-expectation.json
+    volumes:
+      - ./mock:/mock
+
   gateway:
     image: kvalitetsit/klausuleret-tilskud-auth-gateway:latest
     environment:
-      - ITUKT_GATEWAY_API_URL=http://host.docker.internal:8080
+      - ITUKT_GATEWAY_API_URL=http://api-mock:1080
       - ITUKT_GATEWAY_OIOSAML_SERVLET_ENTITYID=http://saml.bst.dev/nadm
       # TODO: virker ikke med localhost da SEB kræver url https://dev.nadm.dk:8080 for entityid http://saml.bst.dev/nadm
       - ITUKT_GATEWAY_OIOSAML_SERVLET_BASEURL=http://localhost:8080
@@ -11,6 +20,7 @@ services:
       - ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_ALIAS=nadm test - 11/4/2026
       - ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_ENTITYID=https://t-seb.dkseb.dk/runtime/
       - ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_METADATAFILE=/app/configuration/seb.xml
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} # So it can be set from integration tests
       - JVM_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     ports:
       - 8082:8080
@@ -18,6 +28,3 @@ services:
     volumes:
       - ./configuration/seb.xml:/app/configuration/seb.xml
       - ./configuration/NADM_Test_new.p12:/app/configuration/keystore.p12
-
-    extra_hosts:
-      - "host.docker.internal:host-gateway"

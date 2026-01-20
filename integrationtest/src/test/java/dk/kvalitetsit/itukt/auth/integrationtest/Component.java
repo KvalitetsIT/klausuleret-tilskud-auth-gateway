@@ -9,4 +9,6 @@ public sealed interface Component permits OutsideDockerComponent, InDockerCompon
 
     Integer getPort();
 
+    void withSpringProfile(String profile);
+
 }

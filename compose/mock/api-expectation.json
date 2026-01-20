@@ -1,0 +1,40 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/test",
+      "queryStringParameters": [
+        {
+          "name": "test",
+          "values": [
+            "test"
+          ]
+        }
+      ]
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": "Success!",
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/test",
+      "headers": {
+        "Content-Type": "text/plain"
+      },
+      "body": "test"
+    },
+    "httpResponse": {
+      "statusCode": 201,
+      "body": "Success!",
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    }
+  }
+]

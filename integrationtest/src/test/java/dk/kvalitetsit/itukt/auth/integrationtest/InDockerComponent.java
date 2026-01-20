@@ -10,14 +10,16 @@ import java.time.Duration;
 import static dk.kvalitetsit.itukt.auth.integrationtest.BaseTest.getComposeFile;
 
 final class InDockerComponent implements Component {
-    private static final String SERVICE_NAME = "gateway";
     private final ComposeContainer component;
+    private final String serviceName;
+    private final int port;
 
-    public InDockerComponent(Logger logger) {
+    public InDockerComponent(Logger logger, String serviceName, int port) {
+        this.port = port;
         this.component = new ComposeContainer(getComposeFile("docker-compose.yaml"))
-                .withServices(SERVICE_NAME)
-                .withExposedService(SERVICE_NAME, 8080, Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(60)))
-                .withLogConsumer(SERVICE_NAME, new Slf4jLogConsumer(logger).withPrefix(SERVICE_NAME));
+                .withExposedService(serviceName, port, Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(60)))
+                .withLogConsumer(serviceName, new Slf4jLogConsumer(logger).withPrefix(serviceName));
+        this.serviceName = serviceName;
     }
 
     @Override
@@ -32,11 +34,16 @@ final class InDockerComponent implements Component {
 
     @Override
     public String getHost() {
-        return component.getServiceHost(SERVICE_NAME, 8080);
+        return component.getServiceHost(serviceName, port);
     }
 
     @Override
     public Integer getPort() {
-        return component.getServicePort(SERVICE_NAME, 8080);
+        return component.getServicePort(serviceName, port);
+    }
+
+    @Override
+    public void withSpringProfile(String profile) {
+        component.withEnv("SPRING_PROFILES_ACTIVE", profile);
     }
 }
