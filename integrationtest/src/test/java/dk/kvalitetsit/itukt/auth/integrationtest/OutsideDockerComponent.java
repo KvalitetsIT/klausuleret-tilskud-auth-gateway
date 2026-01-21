@@ -20,9 +20,9 @@ final class OutsideDockerComponent implements Component {
         properties.setProperty("itukt.gateway.api.url", String.format("http://%s:%s", apiMock.getHost(), apiMock.getPort()));
         properties.setProperty("itukt.gateway.oiosaml.servlet.entityid", "test");
         properties.setProperty("itukt.gateway.oiosaml.servlet.baseurl", "test");
-        properties.setProperty("itukt.gateway.oiosaml.servlet.keystore.location", "NADM_Test_new.p12");
+        properties.setProperty("itukt.gateway.oiosaml.servlet.keystore.location", "keystore.p12");
         properties.setProperty("itukt.gateway.oiosaml.servlet.keystore.password", "Test1234");
-        properties.setProperty("itukt.gateway.oiosaml.servlet.keystore.alias", "nadm test - 11/4/2026");
+        properties.setProperty("itukt.gateway.oiosaml.servlet.keystore.alias", "java.referenceimplementering");
         properties.setProperty("itukt.gateway.oiosaml.servlet.idp.entityid", "test");
         properties.setProperty("itukt.gateway.oiosaml.servlet.idp.metadatafile", "seb.xml");
         return properties;
