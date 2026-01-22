@@ -16,7 +16,11 @@ import java.util.List;
 @Configuration
 public class GatewayBeanRegistration {
     private final Logger logger = LoggerFactory.getLogger(GatewayBeanRegistration.class);
-    private List<String> allowedOrigins = List.of("*");
+    private final GatewayConfiguration configuration;
+
+    public GatewayBeanRegistration(GatewayConfiguration configuration) {
+        this.configuration = configuration;
+    }
 
     @Bean
     @Profile("without-oiosaml")
@@ -35,8 +39,7 @@ public class GatewayBeanRegistration {
     @Bean
     public CorsFilter corsFilter() {
         var corsConfig = new CorsConfiguration();
-//        corsConfig.setAllowCredentials(true);
-        allowedOrigins.forEach(corsConfig::addAllowedOrigin);
+        configuration.allowedOrigins().forEach(corsConfig::addAllowedOrigin);
         corsConfig.addAllowedHeader("*");
         corsConfig.addAllowedMethod("*");
 

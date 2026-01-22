@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +33,7 @@ class GatewayControllerTest {
         Mockito.when(proxyExchange.path("/api")).thenReturn(PATH);
         Mockito.when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
         Mockito.when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
-        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL));
+        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), List.of());
         gatewayController = new GatewayController(gatewayConf, userIDExtractor);
     }
 
