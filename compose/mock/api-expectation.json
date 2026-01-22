@@ -10,7 +10,10 @@
             "test"
           ]
         }
-      ]
+      ],
+      "headers": {
+        "User-ID": "mocked-user"
+      }
     },
     "httpResponse": {
       "statusCode": 200,
@@ -25,7 +28,8 @@
       "method": "POST",
       "path": "/test",
       "headers": {
-        "Content-Type": "text/plain"
+        "Content-Type": "text/plain",
+        "User-ID": "mocked-user"
       },
       "body": "test"
     },

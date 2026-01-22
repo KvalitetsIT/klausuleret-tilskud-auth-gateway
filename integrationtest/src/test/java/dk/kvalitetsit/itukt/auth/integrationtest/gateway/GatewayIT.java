@@ -34,7 +34,7 @@ public class GatewayIT extends BaseTest {
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(200, response.statusCode());
-        assertEquals("Success!", response.body());
+        assertEquals("Success!", response.body(), "Response should match body from mock API");
     }
 
     @Test
@@ -50,7 +50,7 @@ public class GatewayIT extends BaseTest {
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         assertEquals(201, response.statusCode());
-        assertEquals("Success!", response.body());
+        assertEquals("Success!", response.body(), "Response should match body from mock API");
     }
 
     private String getGatewayUrl() {

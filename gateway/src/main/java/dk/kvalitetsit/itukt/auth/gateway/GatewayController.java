@@ -1,5 +1,6 @@
 package dk.kvalitetsit.itukt.auth.gateway;
 
+import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserIDExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.mvc.ProxyExchange;
@@ -14,28 +15,38 @@ import javax.servlet.http.HttpServletRequest;
 public class GatewayController {
     private final Logger logger = LoggerFactory.getLogger(GatewayController.class);
     private final GatewayConfiguration configuration;
+    private final UserIDExtractor userIDExtractor;
 
-    public GatewayController(GatewayConfiguration configuration) {
+    public GatewayController(GatewayConfiguration configuration, UserIDExtractor userIDExtractor) {
         this.configuration = configuration;
+        this.userIDExtractor = userIDExtractor;
     }
 
     @RequestMapping("/api/**")
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
-        String apiUri = configuration.api().url() + proxy.path("/api");
-        apiUri = appendQueryParams(apiUri, request.getQueryString());
-        logger.info("Forwarding request to: {}", apiUri);
+        String apiUri = constructApiUrl(proxy, request);
+        var api = proxy
+                .uri(apiUri)
+                .header("User-ID", userIDExtractor.extractUserID());
 
         var method = getHttpMethod(request);
 
+        logger.info("Forwarding request to: {}", apiUri);
         return switch (method) {
-            case GET, TRACE -> proxy.uri(apiUri).get();
-            case HEAD -> proxy.uri(apiUri).head();
-            case POST -> proxy.uri(apiUri).post();
-            case PUT -> proxy.uri(apiUri).put();
-            case PATCH -> proxy.uri(apiUri).patch();
-            case DELETE -> proxy.uri(apiUri).delete();
-            case OPTIONS -> proxy.uri(apiUri).options();
+            case GET, TRACE -> api.get();
+            case HEAD -> api.head();
+            case POST -> api.post();
+            case PUT -> api.put();
+            case PATCH -> api.patch();
+            case DELETE -> api.delete();
+            case OPTIONS -> api.options();
         };
+    }
+
+    private String constructApiUrl(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
+        String apiUri = configuration.api().url() + proxy.path("/api");
+        apiUri = appendQueryParams(apiUri, request.getQueryString());
+        return apiUri;
     }
 
     private static HttpMethod getHttpMethod(HttpServletRequest request) {
