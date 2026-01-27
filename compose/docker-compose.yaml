@@ -1,0 +1,35 @@
+services:
+  api-mock:
+    image: mockserver/mockserver:latest
+    ports:
+      - 1080:1080
+    environment:
+      - MOCKSERVER_INITIALIZATION_JSON_PATH=/mock/api-expectation.json
+    volumes:
+      - ./mock:/mock
+
+  gateway:
+    image: kvalitetsit/klausuleret-tilskud-auth-gateway:latest
+    environment:
+      - ITUKT_GATEWAY_ALLOWEDORIGINS=*
+      - ITUKT_GATEWAY_API_URL=http://api-mock:1080
+      - ITUKT_GATEWAY_OIOSAML_SERVLET_ENTITYID=http://saml.bst.dev/itukt-local # Must be registered at SEB
+      - ITUKT_GATEWAY_OIOSAML_SERVLET_BASEURL=http://localhost:8040
+      - ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_LOCATION=/app/configuration/keystore.p12
+      - ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_PASSWORD=Test1234
+      - ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_ALIAS=java.referenceimplementering
+      - ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_ENTITYID=https://t-seb.dkseb.dk/runtime/
+      - ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_METADATAFILE=/app/configuration/idp.xml
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} # So it can be set from integration tests
+      - JVM_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      # Https
+#      - SERVER_SSL_KEY_STORE=/app/configuration/keystore.p12
+#      - SERVER_SSL_KEY_STORE_PASSWORD=Test1234
+#      - SERVER_SSL_KEY_STORE_TYPE=PKCS12
+#      - SERVER_SSL_KEY_ALIAS=java.referenceimplementering
+    ports:
+      - 8040:8080
+      - 5006:5005
+    volumes:
+      - ./configuration/seb.xml:/app/configuration/idp.xml
+      - ./configuration/keystore.p12:/app/configuration/keystore.p12

@@ -1,0 +1,62 @@
+<EntityDescriptor ID="_e25e3054-ba72-4d06-9792-577aeb1d7bc6" entityID="https://t-seb.dkseb.dk/runtime/" xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+  <IDPSSODescriptor WantAuthnRequestsSigned="true" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <KeyDescriptor use="signing">
+      <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <X509Data>
+          <X509Certificate>
+            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
+          </X509Certificate>
+        </X509Data>
+      </KeyInfo>
+    </KeyDescriptor>
+    <KeyDescriptor use="encryption">
+      <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <X509Data>
+          <X509Certificate>
+            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
+          </X509Certificate>
+        </X509Data>
+      </KeyInfo>
+    </KeyDescriptor>
+    <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://t-seb.dkseb.dk/runtime/services/artifact/saml2/soap" index="0" isDefault="true"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://t-seb.dkseb.dk/runtime/saml2/issue.idp" ResponseLocation="https://t-seb.dkseb.dk/runtime/saml2/signoff.idp"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://t-seb.dkseb.dk/runtime/saml2/issue.idp" ResponseLocation="https://t-seb.dkseb.dk/runtime/saml2/signoff.idp"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://t-seb.dkseb.dk/runtime/saml2/artifact.idp" ResponseLocation="https://t-seb.dkseb.dk/runtime/saml2/artifact.idp"/>
+    <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:persistent</NameIDFormat>
+    <NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+    <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</NameIDFormat>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://t-seb.dkseb.dk/runtime/saml2/issue.idp"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://t-seb.dkseb.dk/runtime/saml2/issue.idp"/>
+    <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://t-seb.dkseb.dk/runtime/saml2/artifact.idp"/>
+    <Attribute Name="http://sts.safewhere.com/certificate" FriendlyName="STS Certificate Thumbprint"
+      xmlns="urn:oasis:names:tc:SAML:2.0:assertion"/>
+    <Attribute Name="http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+      xmlns="urn:oasis:names:tc:SAML:2.0:assertion">
+      <AttributeValue>eSsKomIndBDB_634491000016008_3</AttributeValue>
+      <AttributeValue>ClaimAdmin</AttributeValue>
+      <AttributeValue>ConnectionAdmin</AttributeValue>
+      <AttributeValue>UserAdmin</AttributeValue>
+      <AttributeValue>OrganizationAdmin</AttributeValue>
+      <AttributeValue>GroupAdmin</AttributeValue>
+      <AttributeValue>SystemSetupAdmin</AttributeValue>
+      <AttributeValue>ClaimTransformationAdmin</AttributeValue>
+      <AttributeValue>Identify Service</AttributeValue>
+    </Attribute>
+    <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+      xmlns="urn:oasis:names:tc:SAML:2.0:assertion"/>
+  </IDPSSODescriptor>
+  <Organization>
+    <OrganizationName xml:lang="da">Sundhedsdatastyrelsen</OrganizationName>
+    <OrganizationDisplayName xml:lang="da">Sundhedsdatastyrelsen</OrganizationDisplayName>
+    <OrganizationURL xml:lang="da">https://sundhedsdata.dk/</OrganizationURL>
+  </Organization>
+  <ContactPerson contactType="administrative">
+    <GivenName>Jesper</GivenName>
+    <SurName>Hvid</SurName>
+    <EmailAddress>sebdrift@sundhedsdata.dk</EmailAddress>
+    <TelephoneNumber>00000000</TelephoneNumber>
+  </ContactPerson>
+  <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://t-seb.dkseb.dk/runtime/services/attributeservice/saml2/soap"/>
+  </AttributeAuthorityDescriptor>
+</EntityDescriptor>

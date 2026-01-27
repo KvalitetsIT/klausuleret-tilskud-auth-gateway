@@ -1,0 +1,44 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/test",
+      "queryStringParameters": [
+        {
+          "name": "test",
+          "values": [
+            "test"
+          ]
+        }
+      ],
+      "headers": {
+        "User-ID": "mocked-user"
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": "Success!",
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/test",
+      "headers": {
+        "Content-Type": "text/plain",
+        "User-ID": "mocked-user"
+      },
+      "body": "test"
+    },
+    "httpResponse": {
+      "statusCode": 201,
+      "body": "Success!",
+      "headers": {
+        "Content-Type": "text/plain"
+      }
+    }
+  }
+]
