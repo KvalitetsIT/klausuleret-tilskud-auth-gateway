@@ -45,14 +45,12 @@ public class GatewayController {
 
     private String constructApiUrl(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
         String apiUri = configuration.api().url() + proxy.path("/api");
-        apiUri = appendQueryParams(apiUri, request.getQueryString());
-        return apiUri;
+        return appendQueryParams(apiUri, request.getQueryString());
     }
 
     private static HttpMethod getHttpMethod(HttpServletRequest request) {
         var method = HttpMethod.resolve(request.getMethod().toUpperCase());
-        method = method == null ? HttpMethod.GET : method;
-        return method;
+        return method == null ? HttpMethod.GET : method;
     }
 
     private static String appendQueryParams(String uri, String queryString) {
