@@ -43,7 +43,7 @@ public class GatewayController {
         };
         logger.info("Proxy: " + proxy.getClass().getName());
         logger.info("Api: " + api.getClass().getName());
-        logger.info("Response code: " + (response.getStatusCode() != null ? response.getStatusCode().value() : null));
+        logger.info("Response code: " + (response != null && response.getStatusCode() != null ? response.getStatusCode().value() : null));
         return response;
     }
 
