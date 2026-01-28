@@ -8,6 +8,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+# Set docker image names.
+    - name: Setup env variables
+      run: |
+        echo "DOCKER_SERVICE=kvalitetsit/klausuleret-tilskud-auth-gateway" >> $GITHUB_ENV
+
 # Checkout source code
     - uses: actions/checkout@v6
 
@@ -20,8 +26,21 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
+      # Login to docker hub using secrets in GitHub.
+    - name: Login to docker
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_HUB_USER }}
+        password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
     - name: Build and test
       run: ./build/build.sh
+
+    - name: Tag service git id docker image
+      run: ./build/docker-tag.sh ${{ env.DOCKER_SERVICE }}:latest ${{ env.DOCKER_SERVICE }}:${{ github.sha }}
+
+    - name: Push service git id docker image.
+      run: ./build/docker-push.sh ${{ env.DOCKER_SERVICE }}:${{ github.sha }}
 
     - name: Upload Jacoco coverage report
       uses: actions/upload-artifact@v6
