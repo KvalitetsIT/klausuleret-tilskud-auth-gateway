@@ -10,15 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 
 @RestController
 public class GatewayController {
     private final Logger logger = LoggerFactory.getLogger(GatewayController.class);
-    private final GatewayConfiguration configuration;
+    private final URL apiUrl;
     private final UserIDExtractor userIDExtractor;
 
     public GatewayController(GatewayConfiguration configuration, UserIDExtractor userIDExtractor) {
-        this.configuration = configuration;
+        this.apiUrl = configuration.api().url();
         this.userIDExtractor = userIDExtractor;
     }
 
@@ -27,7 +28,8 @@ public class GatewayController {
         String apiUri = constructApiUrl(proxy, request);
         var api = proxy
                 .uri(apiUri)
-                .header("User-ID", userIDExtractor.extractUserID());
+                .header("User-ID", userIDExtractor.extractUserID())
+                .header("Host", apiUrl.getHost());
 
         var method = getHttpMethod(request);
 
@@ -44,7 +46,7 @@ public class GatewayController {
     }
 
     private String constructApiUrl(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
-        String apiUri = configuration.api().url() + proxy.path("/api");
+        String apiUri = apiUrl + proxy.path("/api");
         return appendQueryParams(apiUri, request.getQueryString());
     }
 

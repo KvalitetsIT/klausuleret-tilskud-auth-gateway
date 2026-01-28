@@ -11,14 +11,15 @@ import org.springframework.cloud.gateway.mvc.ProxyExchange;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 class GatewayControllerTest {
-    private static final String API_URL = "api-url";
+    private static final URL API_URL = createURL("http://test.dk");
     private static final String PATH = "/test";
     @Mock
     private UserIDExtractor userIDExtractor;
@@ -50,6 +51,7 @@ class GatewayControllerTest {
         assertEquals(expectedResponse, response);
         Mockito.verify(proxyExchange).uri(API_URL + PATH);
         Mockito.verify(proxyExchange).header("User-ID", userId);
+        Mockito.verify(proxyExchange).header("Host", API_URL.getHost());
     }
 
     @Test
@@ -162,5 +164,12 @@ class GatewayControllerTest {
         assertEquals(expectedResponse, response);
     }
 
+    private static URL createURL(String url) {
+        try {
+            return new URI(url).toURL();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }
