@@ -32,7 +32,7 @@ public class GatewayController {
         var method = getHttpMethod(request);
 
         logger.info("Forwarding request to: {}", apiUri);
-        return switch (method) {
+        ResponseEntity<?> response = switch (method) {
             case GET, TRACE -> api.get();
             case HEAD -> api.head();
             case POST -> api.post();
@@ -41,6 +41,10 @@ public class GatewayController {
             case DELETE -> api.delete();
             case OPTIONS -> api.options();
         };
+        logger.info("Proxy: " + proxy.getClass().getName());
+        logger.info("Api: " + api.getClass().getName());
+        logger.info("Response code: " + response.getStatusCode().value());
+        return response;
     }
 
     private String constructApiUrl(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
