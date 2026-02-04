@@ -2,6 +2,7 @@ package dk.kvalitetsit.itukt.auth.oiosaml;
 
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Profile;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Validated
 @ConfigurationProperties(prefix = "itukt.gateway.oiosaml")
+@Profile("!without-oiosaml")
 public record OIOSAMLConfiguration(@NotNull @Valid ServletConfiguration servlet) {
 
     public record ServletConfiguration(

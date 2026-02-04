@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 
 @Configuration
+@Profile("!without-oiosaml")
 public class OIOSAMLBeanRegistration {
     private final Logger logger = LoggerFactory.getLogger(OIOSAMLBeanRegistration.class);
     private final OIOSAMLConfiguration.ServletConfiguration servletConf;
@@ -24,7 +25,6 @@ public class OIOSAMLBeanRegistration {
 
     // Authenticates requests to /api/*
     @Bean
-    @Profile("!without-oiosaml")
     public FilterRegistrationBean<AuthenticatedFilter> oioSamlFilter() {
         logger.info("Registering OIOSAML AuthenticatedFilter");
 
@@ -37,7 +37,6 @@ public class OIOSAMLBeanRegistration {
 
     // Handles SAML requests for login, logout, metadata, etc.
     @Bean
-    @Profile("!without-oiosaml")
     public ServletRegistrationBean<DispatcherServlet> oioSamlServlet() {
         logger.info("Registering OIOSAML DispatcherServlet");
 
@@ -58,7 +57,6 @@ public class OIOSAMLBeanRegistration {
 
     // So that sessions destroyed by the server are also removed from the OIOSAML Session handler
     @Bean
-    @Profile("!without-oiosaml")
     public ServletListenerRegistrationBean<SessionDestroyListener> oioSamlSessionDestroyListener() {
         logger.info("Registering OIOSAML SessionDestroyListener");
         return new ServletListenerRegistrationBean<>(new SessionDestroyListener());
