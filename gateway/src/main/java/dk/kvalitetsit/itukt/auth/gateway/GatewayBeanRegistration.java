@@ -1,5 +1,7 @@
 package dk.kvalitetsit.itukt.auth.gateway;
 
+import dk.gov.oio.saml.service.OIOSAML3Service;
+import dk.gov.oio.saml.util.InternalException;
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.SAMLAssertionUserIDExtractor;
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserIDExtractor;
 import org.slf4j.Logger;
@@ -7,11 +9,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.util.List;
+import javax.servlet.http.HttpSession;
 
 @Configuration
 public class GatewayBeanRegistration {
@@ -31,9 +34,11 @@ public class GatewayBeanRegistration {
 
     @Bean
     @Profile("!without-oiosaml")
-    public UserIDExtractor samlAssertionUserIDExtractor() {
+    @RequestScope
+    public UserIDExtractor samlAssertionUserIDExtractor(HttpSession httpSession) throws InternalException {
         logger.info("Registering SAMLAssertionUserIDExtractor");
-        return new SAMLAssertionUserIDExtractor();
+        var sessionHandler = OIOSAML3Service.getSessionHandlerFactory().getHandler();
+        return new SAMLAssertionUserIDExtractor(sessionHandler, httpSession, configuration.userIdAttribute());
     }
 
     @Bean

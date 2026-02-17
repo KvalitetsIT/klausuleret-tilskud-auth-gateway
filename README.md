@@ -32,6 +32,7 @@ De følgende tabeller indeholder miljø-variable og dertilhørende beskrivelser.
 | SPRING_PROFILES_ACTIVE            | Sæt denne til 'without-oiosaml' for at køre uden OIOSAML. Forespørgsler vil få tilknyttet bruger id'et 'mocked-user'. Kun til test. OIOSAML servlet variable er ikke påkrævet når denne er sat | Nej      |
 | ITUKT_GATEWAY_ALLOWEDORIGINS      | En liste af URL’er/origins som skal tillades af CORS.                                                                                                                                          | Nej      |
 | ITUKT_GATEWAY_API_URL             | URL på det api der skal forwardes til.                                                                                                                                                         | Ja       |
+| ITUKT_GATEWAY_USERIDATTRIBUTE     | Navnet på den SAML assertion attribut der skal sættes som bruger id på kaldet til api'et                                                                                                       | Ja       |
 
 ## OIOSAML servlet variable
 
