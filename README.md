@@ -45,4 +45,4 @@ Følgende variable bruges til at konfigurere OIOSAML servletten. Se evt dokument
 | ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_PASSWORD | Kodeord til ovenstående keystore.                                | Ja       |
 | ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_ALIAS    | Alias på keyentry i ovenstående keystore.                        | Ja       |
 | ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_ENTITYID      | Entity ID på den idP, der skal benyttes til login.               | Ja       |
-| ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_METADATAFILE  | Sti til metadata fil for idP'en                                  | Ja       |
+| ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_METADATAURL   | URL til metadata for idP'en                                      | Ja       |

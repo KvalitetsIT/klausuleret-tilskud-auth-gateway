@@ -50,7 +50,7 @@ public class OIOSAMLBeanRegistration {
         reg.addInitParameter("oiosaml.servlet.keystore.password", servletConf.keystore().password());
         reg.addInitParameter("oiosaml.servlet.keystore.alias", servletConf.keystore().alias());
         reg.addInitParameter("oiosaml.servlet.idp.entityid", servletConf.idp().entityId());
-        reg.addInitParameter("oiosaml.servlet.idp.metadata.file", servletConf.idp().metadataFile());
+        reg.addInitParameter("oiosaml.servlet.idp.metadata.url", servletConf.idp().metadataUrl());
 
         return reg;
     }

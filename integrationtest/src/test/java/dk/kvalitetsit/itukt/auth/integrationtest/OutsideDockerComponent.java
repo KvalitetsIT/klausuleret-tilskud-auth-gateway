@@ -25,7 +25,7 @@ final class OutsideDockerComponent implements Component {
         properties.setProperty("itukt.gateway.oiosaml.servlet.keystore.password", "Test1234");
         properties.setProperty("itukt.gateway.oiosaml.servlet.keystore.alias", "java.referenceimplementering");
         properties.setProperty("itukt.gateway.oiosaml.servlet.idp.entityid", "test");
-        properties.setProperty("itukt.gateway.oiosaml.servlet.idp.metadatafile", "seb.xml");
+        properties.setProperty("itukt.gateway.oiosaml.servlet.idp.metadataurl", "https://t-seb.dkseb.dk/runtime/saml2/metadata.idp");
         return properties;
     }
 

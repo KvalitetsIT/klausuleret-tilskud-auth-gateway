@@ -29,7 +29,7 @@ public record OIOSAMLConfiguration(@NotNull @Valid ServletConfiguration servlet)
 
         public record IdPConfiguration(
                 @NotNull String entityId,
-                @NotNull String metadataFile
+                @NotNull String metadataUrl
         ) {
         }
     }

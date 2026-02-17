@@ -19,7 +19,7 @@ services:
       - ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_PASSWORD=Test1234
       - ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_ALIAS=java.referenceimplementering
       - ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_ENTITYID=https://t-seb.dkseb.dk/runtime/
-      - ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_METADATAFILE=/app/configuration/idp.xml
+      - ITUKT_GATEWAY_OIOSAML_SERVLET_IDP_METADATAURL=https://t-seb.dkseb.dk/runtime/saml2/metadata.idp
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} # So it can be set from integration tests
       - JVM_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       # Https
@@ -31,5 +31,4 @@ services:
       - 8040:8080
       - 5006:5005
     volumes:
-      - ./configuration/seb.xml:/app/configuration/idp.xml
       - ./configuration/keystore.p12:/app/configuration/keystore.p12
