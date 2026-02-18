@@ -13,6 +13,7 @@ services:
     environment:
       - ITUKT_GATEWAY_ALLOWEDORIGINS=*
       - ITUKT_GATEWAY_API_URL=http://api-mock:1080
+      - ITUKT_GATEWAY_USERIDATTRIBUTE=https://data.gov.dk/model/core/eid/email
       - ITUKT_GATEWAY_OIOSAML_SERVLET_ENTITYID=http://saml.bst.dev/itukt-kit-local # Registered at SEB - metadata exposed from KIT test environment
       - ITUKT_GATEWAY_OIOSAML_SERVLET_BASEURL=http://localhost:8040
       - ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_LOCATION=/app/configuration/keystore.p12

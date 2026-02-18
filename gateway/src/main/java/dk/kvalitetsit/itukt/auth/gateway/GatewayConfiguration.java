@@ -12,6 +12,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "itukt.gateway")
 public record GatewayConfiguration(
         @NotNull @Valid ApiConfiguration api,
+        @NotNull String userIdAttribute,
         @NotNull List<String> allowedOrigins) {
     public record ApiConfiguration(@NotNull URL url) {
     }

@@ -39,7 +39,7 @@ class GatewayControllerTest {
         Mockito.when(proxyExchange.path("/api")).thenReturn(PATH);
         Mockito.when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
         Mockito.when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
-        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), List.of());
+        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", List.of());
         gatewayController = new GatewayController(gatewayConf, userIDExtractor);
     }
 
