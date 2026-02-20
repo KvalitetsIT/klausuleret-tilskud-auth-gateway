@@ -50,7 +50,7 @@ public class GatewayBeanRegistration {
         corsConfig.addAllowedMethod("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfig);
+        source.registerCorsConfiguration(GatewayConstants.API_PATH, corsConfig);
 
         return new CorsFilter(source);
     }
