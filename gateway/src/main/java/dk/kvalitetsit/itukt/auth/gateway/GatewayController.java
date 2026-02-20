@@ -23,7 +23,7 @@ public class GatewayController {
         this.userIDExtractor = userIDExtractor;
     }
 
-    @RequestMapping("/api/**")
+    @RequestMapping(GatewayConstants.API_PATH)
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
         String apiUri = constructApiUrl(proxy, request);
         var api = proxy

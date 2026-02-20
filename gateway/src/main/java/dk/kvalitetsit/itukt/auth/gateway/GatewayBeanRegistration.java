@@ -45,6 +45,7 @@ public class GatewayBeanRegistration {
     public CorsFilter corsFilter() {
         var corsConfig = new CorsConfiguration();
         configuration.allowedOrigins().forEach(corsConfig::addAllowedOrigin);
+        corsConfig.setAllowCredentials(true);
         corsConfig.addAllowedHeader("*");
         corsConfig.addAllowedMethod("*");
 
