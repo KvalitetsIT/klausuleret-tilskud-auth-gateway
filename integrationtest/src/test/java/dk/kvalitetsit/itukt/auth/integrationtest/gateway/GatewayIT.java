@@ -1,22 +1,23 @@
 package dk.kvalitetsit.itukt.auth.integrationtest.gateway;
 
+import dk.kvalitetsit.itukt.auth.gateway.GatewayConstants;
 import dk.kvalitetsit.itukt.auth.integrationtest.BaseTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class GatewayIT extends BaseTest {
 
-    private static final String GATEWAY_PATH = "/api";
     private HttpClient client;
 
     @BeforeAll
@@ -28,7 +29,7 @@ public class GatewayIT extends BaseTest {
     void gateway_WithGetRequest_ForwardsRequestToMockApi() throws IOException, InterruptedException {
         var mockApiExpectedPath = "/test?test=test";
         var request = HttpRequest.newBuilder()
-                .uri(URI.create(getGatewayUrl() + GATEWAY_PATH + mockApiExpectedPath))
+                .uri(URI.create(getGatewayUrl() + GatewayConstants.API_PATH + mockApiExpectedPath))
                 .GET()
                 .build();
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -43,7 +44,7 @@ public class GatewayIT extends BaseTest {
         var mockApiExpectedBody = "test";
         var mockApiExpectedContentType = "text/plain";
         var request = HttpRequest.newBuilder()
-                .uri(URI.create(getGatewayUrl() + GATEWAY_PATH + mockApiExpectedPath))
+                .uri(URI.create(getGatewayUrl() + GatewayConstants.API_PATH + mockApiExpectedPath))
                 .setHeader("Content-Type", mockApiExpectedContentType)
                 .POST(HttpRequest.BodyPublishers.ofString(mockApiExpectedBody))
                 .build();
@@ -51,6 +52,31 @@ public class GatewayIT extends BaseTest {
 
         assertEquals(201, response.statusCode());
         assertEquals("Success!", response.body(), "Response should match body from mock API");
+    }
+
+    @Test
+    void login_RedirectsToLoginUrl() throws IOException, InterruptedException {
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(getGatewayUrl() + GatewayConstants.GATEWAY_PATH + "/login"))
+                .GET()
+                .build();
+        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpStatus.FOUND.value(), response.statusCode());
+        Optional<String> locationHeader = response.headers().firstValue("Location");
+        assertTrue(locationHeader.isPresent());
+        assertEquals("http://localhost:4200", locationHeader.get(), "Location header should match login redirect url");
+    }
+
+    @Test
+    void authCheck_Returns200() throws IOException, InterruptedException {
+        var request = HttpRequest.newBuilder()
+                .uri(URI.create(getGatewayUrl() + GatewayConstants.GATEWAY_PATH + "/auth-check"))
+                .GET()
+                .build();
+        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        assertEquals(HttpStatus.OK.value(), response.statusCode());
     }
 
     private String getGatewayUrl() {

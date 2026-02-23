@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 class GatewayControllerTest {
     private static final URL API_URL = createURL("http://test.dk");
+    private static final URL LOGIN_REDIRECT_URL = createURL("http://login-test.dk");
     private static final String PATH = "/test";
     @Mock
     private UserIDExtractor userIDExtractor;
@@ -36,10 +37,10 @@ class GatewayControllerTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(proxyExchange.path("/api")).thenReturn(PATH);
+        Mockito.when(proxyExchange.path(GatewayConstants.API_PATH)).thenReturn(PATH);
         Mockito.when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
         Mockito.when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
-        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", List.of());
+        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", LOGIN_REDIRECT_URL, List.of());
         gatewayController = new GatewayController(gatewayConf, userIDExtractor);
     }
 
@@ -70,7 +71,7 @@ class GatewayControllerTest {
 
     @Test
     void proxy_WithQueryParameters_ForwardsQueryParametersToApi() {
-        Mockito.when(proxyExchange.path("/api")).thenReturn(PATH);
+        Mockito.when(proxyExchange.path(GatewayConstants.API_PATH)).thenReturn(PATH);
         Mockito.when(httpRequest.getMethod()).thenReturn("GET");
         String queryparams = "queryparams";
         Mockito.when(httpRequest.getQueryString()).thenReturn(queryparams);

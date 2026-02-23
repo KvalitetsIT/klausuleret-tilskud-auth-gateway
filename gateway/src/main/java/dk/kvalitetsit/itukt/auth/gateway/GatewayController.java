@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.mvc.ProxyExchange;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,14 +18,26 @@ import java.net.URL;
 public class GatewayController {
     private final Logger logger = LoggerFactory.getLogger(GatewayController.class);
     private final URL apiUrl;
+    private final String loginRedirectUrl;
     private final UserIDExtractor userIDExtractor;
 
     public GatewayController(GatewayConfiguration configuration, UserIDExtractor userIDExtractor) {
         this.apiUrl = configuration.api().url();
+        this.loginRedirectUrl = configuration.loginRedirectUrl().toString();
         this.userIDExtractor = userIDExtractor;
     }
 
-    @RequestMapping(GatewayConstants.API_PATH)
+    @GetMapping(GatewayConstants.GATEWAY_PATH + "/login")
+    public ResponseEntity<Void> login() {
+        return ResponseEntity.status(HttpStatus.FOUND).header("Location", loginRedirectUrl).build();
+    }
+
+    @GetMapping(GatewayConstants.GATEWAY_PATH + "/auth-check")
+    public ResponseEntity<Void> authCheck() {
+        return ResponseEntity.ok().build();
+    }
+
+    @RequestMapping(GatewayConstants.API_PATH + "/**")
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
         String apiUri = constructApiUrl(proxy, request);
         var api = proxy
@@ -51,7 +65,7 @@ public class GatewayController {
     }
 
     private String constructApiUrl(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
-        String apiUri = apiUrl + proxy.path("/api");
+        String apiUri = apiUrl + proxy.path(GatewayConstants.API_PATH);
         return appendQueryParams(apiUri, request.getQueryString());
     }
 
