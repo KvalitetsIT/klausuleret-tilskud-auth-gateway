@@ -52,6 +52,7 @@ public class OIOSAMLBeanRegistration {
         reg.addInitParameter("oiosaml.servlet.keystore.alias", servletConf.keystore().alias());
         reg.addInitParameter("oiosaml.servlet.idp.entityid", servletConf.idp().entityId());
         reg.addInitParameter("oiosaml.servlet.idp.metadata.url", servletConf.idp().metadataUrl());
+        reg.addInitParameter("oiosaml.servlet.secondary.page.logout", GatewayConstants.LOGIN_PATH);
         // Disable OIOSAML 3.0 profile validation, since 'OIOSAML Attribute Profiles for Healthcare' is used
         // specVersion is 'OIOSAML-H-3.0', not 'OIOSAML-3.0'
         reg.addInitParameter("oiosaml.servlet.profile.validation.enabled", "false");

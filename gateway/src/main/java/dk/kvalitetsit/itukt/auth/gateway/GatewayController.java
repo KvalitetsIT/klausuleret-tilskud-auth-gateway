@@ -27,7 +27,7 @@ public class GatewayController {
         this.userIDExtractor = userIDExtractor;
     }
 
-    @GetMapping(GatewayConstants.GATEWAY_PATH + "/login")
+    @GetMapping(GatewayConstants.LOGIN_PATH)
     public ResponseEntity<Void> login() {
         return ResponseEntity.status(HttpStatus.FOUND).header("Location", loginRedirectUrl).build();
     }

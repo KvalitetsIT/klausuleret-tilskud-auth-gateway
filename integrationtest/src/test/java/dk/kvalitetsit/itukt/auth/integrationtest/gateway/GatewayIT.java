@@ -57,7 +57,7 @@ public class GatewayIT extends BaseTest {
     @Test
     void login_RedirectsToLoginUrl() throws IOException, InterruptedException {
         var request = HttpRequest.newBuilder()
-                .uri(URI.create(getGatewayUrl() + GatewayConstants.GATEWAY_PATH + "/login"))
+                .uri(URI.create(getGatewayUrl() + GatewayConstants.LOGIN_PATH))
                 .GET()
                 .build();
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
