@@ -45,11 +45,12 @@ public class GatewayBeanRegistration {
     public CorsFilter corsFilter() {
         var corsConfig = new CorsConfiguration();
         configuration.allowedOrigins().forEach(corsConfig::addAllowedOrigin);
+        corsConfig.setAllowCredentials(true);
         corsConfig.addAllowedHeader("*");
         corsConfig.addAllowedMethod("*");
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfig);
+        source.registerCorsConfiguration(GatewayConstants.GATEWAY_PATH + "/**", corsConfig);
 
         return new CorsFilter(source);
     }
