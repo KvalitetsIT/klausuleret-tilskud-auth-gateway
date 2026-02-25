@@ -32,7 +32,6 @@ public class OIOSAMLBeanRegistration {
         var reg = new FilterRegistrationBean<AuthenticatedFilter>();
         reg.setFilter(new AuthenticatedFilter());
         reg.addUrlPatterns(GatewayConstants.GATEWAY_PATH + "/*");
-        reg.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return reg;
     }
 

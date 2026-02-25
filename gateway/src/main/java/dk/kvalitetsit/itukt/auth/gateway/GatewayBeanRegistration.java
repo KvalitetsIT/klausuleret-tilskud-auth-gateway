@@ -6,9 +6,11 @@ import dk.kvalitetsit.itukt.auth.gateway.userextraction.SAMLAssertionUserIDExtra
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserIDExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.Ordered;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -42,7 +44,7 @@ public class GatewayBeanRegistration {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
+    public FilterRegistrationBean<CorsFilter> corsFilter() {
         var corsConfig = new CorsConfiguration();
         configuration.allowedOrigins().forEach(corsConfig::addAllowedOrigin);
         corsConfig.setAllowCredentials(true);
@@ -52,6 +54,8 @@ public class GatewayBeanRegistration {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration(GatewayConstants.GATEWAY_PATH + "/**", corsConfig);
 
-        return new CorsFilter(source);
+        var corsFilter = new FilterRegistrationBean<>(new CorsFilter(source));
+        corsFilter.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return corsFilter;
     }
 }
