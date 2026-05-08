@@ -1,6 +1,6 @@
 package dk.kvalitetsit.itukt.auth.gateway;
 
-import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserIDExtractor;
+import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserDataExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.mvc.ProxyExchange;
@@ -19,12 +19,12 @@ public class GatewayController {
     private final Logger logger = LoggerFactory.getLogger(GatewayController.class);
     private final URL apiUrl;
     private final String loginRedirectUrl;
-    private final UserIDExtractor userIDExtractor;
+    private final UserDataExtractor userDataExtractor;
 
-    public GatewayController(GatewayConfiguration configuration, UserIDExtractor userIDExtractor) {
+    public GatewayController(GatewayConfiguration configuration, UserDataExtractor userDataExtractor) {
         this.apiUrl = configuration.api().url();
         this.loginRedirectUrl = configuration.loginRedirectUrl().toString();
-        this.userIDExtractor = userIDExtractor;
+        this.userDataExtractor = userDataExtractor;
     }
 
     @GetMapping(GatewayConstants.LOGIN_PATH)
@@ -42,7 +42,7 @@ public class GatewayController {
         String apiUri = constructApiUrl(proxy, request);
         var api = proxy
                 .uri(apiUri)
-                .header("User-ID", userIDExtractor.extractUserID())
+                .header("User-ID", userDataExtractor.extractUserID())
                 .header("Host", apiUrl.getHost());
 
         var method = getHttpMethod(request);

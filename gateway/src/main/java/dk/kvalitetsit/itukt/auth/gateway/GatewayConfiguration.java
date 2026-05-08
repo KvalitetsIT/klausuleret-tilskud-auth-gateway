@@ -13,6 +13,7 @@ import java.util.List;
 public record GatewayConfiguration(
         @NotNull @Valid ApiConfiguration api,
         @NotNull String userIdAttribute,
+        @NotNull String userRoleAttribute,
         @NotNull URL loginRedirectUrl,
         @NotNull List<String> allowedOrigins) {
     public record ApiConfiguration(@NotNull URL url) {

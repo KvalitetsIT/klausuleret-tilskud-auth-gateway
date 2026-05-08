@@ -1,6 +1,6 @@
 package dk.kvalitetsit.itukt.auth.gateway;
 
-import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserIDExtractor;
+import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserDataExtractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,7 +25,7 @@ class GatewayControllerTest {
     private static final URL LOGIN_REDIRECT_URL = createURL("http://login-test.dk");
     private static final String PATH = "/test";
     @Mock
-    private UserIDExtractor userIDExtractor;
+    private UserDataExtractor userIDExtractor;
     @Mock
     private ProxyExchange<byte[]> proxyExchange;
     @Mock
@@ -40,7 +39,7 @@ class GatewayControllerTest {
         Mockito.when(proxyExchange.path(GatewayConstants.API_PATH)).thenReturn(PATH);
         Mockito.when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
         Mockito.when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
-        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", LOGIN_REDIRECT_URL, List.of());
+        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", "", LOGIN_REDIRECT_URL, List.of());
         gatewayController = new GatewayController(gatewayConf, userIDExtractor);
     }
 

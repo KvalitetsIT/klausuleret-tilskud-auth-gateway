@@ -10,22 +10,30 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
-public class SAMLAssertionUserIDExtractor implements UserIDExtractor {
-    private final Logger logger = LoggerFactory.getLogger(SAMLAssertionUserIDExtractor.class);
+public class SAMLAssertionDataExtractor implements UserDataExtractor {
+    private final Logger logger = LoggerFactory.getLogger(SAMLAssertionDataExtractor.class);
     private final SessionHandler sessionHandler;
     private final HttpSession httpSession;
     private final String userIdAttribute;
+    private final String userRoleAttribute;
 
-    public SAMLAssertionUserIDExtractor(SessionHandler sessionHandler, HttpSession httpSession, String userIdAttribute) {
+    public SAMLAssertionDataExtractor(SessionHandler sessionHandler, HttpSession httpSession, String userIdAttribute, String userRoleAttribute) {
         this.sessionHandler = sessionHandler;
         this.httpSession = httpSession;
         this.userIdAttribute = userIdAttribute;
+        this.userRoleAttribute = userRoleAttribute;
     }
 
     @Override
     public String extractUserID() {
         return Optional.ofNullable(getAssertion().getAttributeValues().get(userIdAttribute))
                 .orElseThrow(() -> createForbiddenException("Missing attribute in SAML assertion: " + userIdAttribute));
+    }
+
+    @Override
+    public String extractUserRole() {
+        return Optional.ofNullable(getAssertion().getAttributeValues().get(userRoleAttribute))
+                .orElseThrow(() -> createForbiddenException("Missing attribute in SAML assertion: " + userRoleAttribute));
     }
 
     private AssertionWrapper getAssertion() {
