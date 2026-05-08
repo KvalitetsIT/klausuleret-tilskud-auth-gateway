@@ -39,7 +39,7 @@ public class GatewayBeanRegistration {
 
             @Override
             public String extractUserRole() {
-                return "mocked-user-role";
+                return "testRole_0_3";
             }
         };
     }

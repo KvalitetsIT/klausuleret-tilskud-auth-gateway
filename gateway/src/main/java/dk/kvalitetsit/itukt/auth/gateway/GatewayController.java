@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 import java.net.URL;
 
 @RestController
@@ -20,10 +22,12 @@ public class GatewayController {
     private final URL apiUrl;
     private final String loginRedirectUrl;
     private final UserDataExtractor userDataExtractor;
+    private final @NotNull String requiredUserRoleFromSeb;
 
     public GatewayController(GatewayConfiguration configuration, UserDataExtractor userDataExtractor) {
         this.apiUrl = configuration.api().url();
         this.loginRedirectUrl = configuration.loginRedirectUrl().toString();
+        this.requiredUserRoleFromSeb = configuration.requiredUserRoleFromSeb();
         this.userDataExtractor = userDataExtractor;
     }
 
@@ -39,6 +43,11 @@ public class GatewayController {
 
     @RequestMapping(GatewayConstants.API_PATH + "/**")
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
+        var userRole = userDataExtractor.extractUserRole();
+        var roleNameIndex = userRole.indexOf("_");
+        if(!userRole.substring(0, roleNameIndex).equals(requiredUserRoleFromSeb))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have the required SEB role claim '" + requiredUserRoleFromSeb + "'");
+
         String apiUri = constructApiUrl(proxy, request);
         var api = proxy
                 .uri(apiUri)

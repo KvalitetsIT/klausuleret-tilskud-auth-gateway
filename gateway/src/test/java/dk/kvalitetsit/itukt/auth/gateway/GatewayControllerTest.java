@@ -11,6 +11,7 @@ import org.springframework.cloud.gateway.mvc.ProxyExchange;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -18,14 +19,16 @@ import java.net.URL;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class GatewayControllerTest {
     private static final URL API_URL = createURL("http://test.dk");
     private static final URL LOGIN_REDIRECT_URL = createURL("http://login-test.dk");
     private static final String PATH = "/test";
+    private static final String REQUIRED_USER_ROLE = "userRole";
     @Mock
-    private UserDataExtractor userIDExtractor;
+    private UserDataExtractor userDataExtractor;
     @Mock
     private ProxyExchange<byte[]> proxyExchange;
     @Mock
@@ -36,18 +39,20 @@ class GatewayControllerTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.when(proxyExchange.path(GatewayConstants.API_PATH)).thenReturn(PATH);
-        Mockito.when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
-        Mockito.when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
-        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", "", LOGIN_REDIRECT_URL, List.of());
-        gatewayController = new GatewayController(gatewayConf, userIDExtractor);
+        Mockito.lenient().when(proxyExchange.path(GatewayConstants.API_PATH)).thenReturn(PATH);
+        Mockito.lenient().when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
+        Mockito.lenient().when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
+        String userRole = REQUIRED_USER_ROLE + "_0_3"; // All user roles from SEB are postfixed with _[0-9]_[0-9]
+        Mockito.when(userDataExtractor.extractUserRole()).thenReturn(userRole);
+        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", "", REQUIRED_USER_ROLE, LOGIN_REDIRECT_URL, List.of());
+        gatewayController = new GatewayController(gatewayConf, userDataExtractor);
     }
 
     @Test
     void proxy_ForwardsToApiWithUriAndHeader() {
         Mockito.when(httpRequest.getMethod()).thenReturn("GET");
         String userId = "test-user";
-        Mockito.when(userIDExtractor.extractUserID()).thenReturn(userId);
+        Mockito.when(userDataExtractor.extractUserID()).thenReturn(userId);
         Mockito.when(proxyExchange.get()).thenReturn(mockedResponse);
         Mockito.when(mockedResponse.getStatusCode()).thenReturn(HttpStatus.OK);
         var responseHeaders = new HttpHeaders();
@@ -66,6 +71,13 @@ class GatewayControllerTest {
         Mockito.verify(proxyExchange).uri(API_URL + PATH);
         Mockito.verify(proxyExchange).header("User-ID", userId);
         Mockito.verify(proxyExchange).header("Host", API_URL.getHost());
+    }
+
+    @Test
+    void proxy_InvalidUserRole() {
+        String userRole = "invalidRole_0_3";
+        Mockito.when(userDataExtractor.extractUserRole()).thenReturn(userRole);
+        assertThrows(ResponseStatusException.class, () -> gatewayController.proxy(proxyExchange, httpRequest));
     }
 
     @Test
