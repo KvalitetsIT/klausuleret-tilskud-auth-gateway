@@ -22,7 +22,7 @@ public class GatewayController {
     private final URL apiUrl;
     private final String loginRedirectUrl;
     private final UserDataExtractor userDataExtractor;
-    private final @NotNull String requiredUserRoleFromSeb;
+    private final String requiredUserRoleFromSeb;
 
     public GatewayController(GatewayConfiguration configuration, UserDataExtractor userDataExtractor) {
         this.apiUrl = configuration.api().url();
@@ -44,8 +44,7 @@ public class GatewayController {
     @RequestMapping(GatewayConstants.API_PATH + "/**")
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
         var userRole = userDataExtractor.extractUserRole();
-        var roleNameIndex = userRole.indexOf("_");
-        if(!userRole.substring(0, roleNameIndex).equals(requiredUserRoleFromSeb))
+        if(!userRole.equals(requiredUserRoleFromSeb))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have the required SEB role claim '" + requiredUserRoleFromSeb + "'");
 
         String apiUri = constructApiUrl(proxy, request);
