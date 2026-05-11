@@ -32,8 +32,10 @@ public class SAMLAssertionDataExtractor implements UserDataExtractor {
 
     @Override
     public String extractUserRole() {
-        return Optional.ofNullable(getAssertion().getAttributeValues().get(userRoleAttribute))
+        String roleClaim = Optional.ofNullable(getAssertion().getAttributeValues().get(userRoleAttribute))
                 .orElseThrow(() -> createForbiddenException("Missing attribute in SAML assertion: " + userRoleAttribute));
+        var roleNameIndex = roleClaim.indexOf("_");
+        return roleClaim.substring(0, roleNameIndex);
     }
 
     private AssertionWrapper getAssertion() {
