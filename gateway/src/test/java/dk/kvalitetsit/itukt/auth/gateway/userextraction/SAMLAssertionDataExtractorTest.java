@@ -83,7 +83,7 @@ class SAMLAssertionDataExtractorTest {
         var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession, userIdAttribute, userRoleAttribute);
         var assertion = Mockito.mock(AssertionWrapper.class);
         Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(assertion);
-        Mockito.when(assertion.getAttributeValues()).thenReturn(Map.of(userRoleAttribute, userRoleValue, "another-attribute", "value"));
+        Mockito.when(assertion.getAttributeValues()).thenReturn(Map.of(userRoleAttribute, userRoleValue + "_0_3", "another-attribute", "value"));
 
         var result = samlAssertionUserIDExtractor.extractUserRole();
 

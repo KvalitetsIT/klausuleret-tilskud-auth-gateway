@@ -40,8 +40,7 @@ class GatewayControllerTest {
         Mockito.when(proxyExchange.path(GatewayConstants.API_PATH)).thenReturn(PATH);
         Mockito.when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
         Mockito.when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
-        String userRole = REQUIRED_USER_ROLE + "_0_3"; // All user roles from SEB are postfixed with _[0-9]_[0-9]
-        Mockito.when(userDataExtractor.extractUserRole()).thenReturn(userRole);
+        Mockito.when(userDataExtractor.extractUserRole()).thenReturn(REQUIRED_USER_ROLE);
         var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", "", REQUIRED_USER_ROLE, LOGIN_REDIRECT_URL, List.of());
         gatewayController = new GatewayController(gatewayConf, userDataExtractor);
     }
