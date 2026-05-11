@@ -20,7 +20,7 @@ final class OutsideDockerComponent implements Component {
         properties.setProperty("itukt.gateway.allowedorigins", "*");
         properties.setProperty("itukt.gateway.useridattribute", "test-id");
         properties.setProperty("itukt.gateway.userroleattribute", "test-role");
-        properties.setProperty("itukt.gateway.requiredUserRoleFromSeb", "testRole"); // All user roles from SEB are postfixed with _[0-9]_[0-9]
+        properties.setProperty("itukt.gateway.requiredUserRoleFromSeb", "testRole");
         properties.setProperty("itukt.gateway.loginredirecturl", "http://localhost:4200");
         properties.setProperty("itukt.gateway.api.url", String.format("http://%s:%s", apiMock.getHost(), apiMock.getPort()));
         properties.setProperty("itukt.gateway.oiosaml.servlet.entityid", "test");
