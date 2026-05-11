@@ -89,4 +89,19 @@ class SAMLAssertionDataExtractorTest {
 
         assertEquals(userRoleValue, result);
     }
+
+    @Test
+    void extractUserRole_WithRequiredAttributeOnAssertionWithoutRoleSuffix_ReturnsAttributeValue() {
+        String userIdAttribute = "test-attribute";
+        String userRoleAttribute = "role-test-attribute";
+        String userRoleValue = "test-role";
+        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession, userIdAttribute, userRoleAttribute);
+        var assertion = Mockito.mock(AssertionWrapper.class);
+        Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(assertion);
+        Mockito.when(assertion.getAttributeValues()).thenReturn(Map.of(userRoleAttribute, userRoleValue, "another-attribute", "value"));
+
+        var result = samlAssertionUserIDExtractor.extractUserRole();
+
+        assertEquals(userRoleValue, result);
+    }
 }
