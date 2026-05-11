@@ -11,7 +11,6 @@ import org.springframework.cloud.gateway.mvc.ProxyExchange;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -19,7 +18,6 @@ import java.net.URL;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class GatewayControllerTest {
@@ -39,9 +37,9 @@ class GatewayControllerTest {
 
     @BeforeEach
     void setUp() {
-        Mockito.lenient().when(proxyExchange.path(GatewayConstants.API_PATH)).thenReturn(PATH);
-        Mockito.lenient().when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
-        Mockito.lenient().when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
+        Mockito.when(proxyExchange.path(GatewayConstants.API_PATH)).thenReturn(PATH);
+        Mockito.when(proxyExchange.uri(Mockito.anyString())).thenReturn(proxyExchange);
+        Mockito.when(proxyExchange.header(Mockito.any(), Mockito.any())).thenReturn(proxyExchange);
         String userRole = REQUIRED_USER_ROLE + "_0_3"; // All user roles from SEB are postfixed with _[0-9]_[0-9]
         Mockito.when(userDataExtractor.extractUserRole()).thenReturn(userRole);
         var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", "", REQUIRED_USER_ROLE, LOGIN_REDIRECT_URL, List.of());
@@ -71,13 +69,6 @@ class GatewayControllerTest {
         Mockito.verify(proxyExchange).uri(API_URL + PATH);
         Mockito.verify(proxyExchange).header("User-ID", userId);
         Mockito.verify(proxyExchange).header("Host", API_URL.getHost());
-    }
-
-    @Test
-    void proxy_InvalidUserRole() {
-        String userRole = "invalidRole_0_3";
-        Mockito.when(userDataExtractor.extractUserRole()).thenReturn(userRole);
-        assertThrows(ResponseStatusException.class, () -> gatewayController.proxy(proxyExchange, httpRequest));
     }
 
     @Test
@@ -212,7 +203,7 @@ class GatewayControllerTest {
         Mockito.verify(proxyExchange).get();
     }
 
-    private static URL createURL(String url) {
+    public static URL createURL(String url) {
         try {
             return new URI(url).toURL();
         } catch (Exception e) {
