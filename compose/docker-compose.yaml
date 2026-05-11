@@ -16,7 +16,7 @@ services:
       - ITUKT_GATEWAY_LOGINREDIRECTURL=http://localhost:4200
       - ITUKT_GATEWAY_USERIDATTRIBUTE=https://data.gov.dk/model/core/eid/email
       - ITUKT_GATEWAY_USERROLEATTRIBUTE=http://schemas.microsoft.com/ws/2008/06/identity/claims/role
-      - ITUKT_GATEWAY_REQUIREDUSERROLE_FROM_SEB=iktAdmin
+      - ITUKT_GATEWAY_REQUIREDUSERROLEFROMSEB=testRole
       - ITUKT_GATEWAY_OIOSAML_SERVLET_ENTITYID=http://saml.bst.dev/itukt-kit-local # Registered at SEB - metadata exposed from KIT test environment
       - ITUKT_GATEWAY_OIOSAML_SERVLET_BASEURL=http://localhost:8040
       - ITUKT_GATEWAY_OIOSAML_SERVLET_KEYSTORE_LOCATION=/app/configuration/keystore.p12
