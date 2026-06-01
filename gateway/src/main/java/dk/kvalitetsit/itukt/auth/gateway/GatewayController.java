@@ -1,23 +1,22 @@
 package dk.kvalitetsit.itukt.auth.gateway;
 
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserDataExtractor;
+import org.openapitools.api.GatewayApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.mvc.ProxyExchange;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.NotNull;
 import java.net.URL;
 
 @RestController
-public class GatewayController {
+public class GatewayController implements GatewayApi {
     private final Logger logger = LoggerFactory.getLogger(GatewayController.class);
     private final URL apiUrl;
     private final String loginRedirectUrl;
@@ -31,12 +30,12 @@ public class GatewayController {
         this.userDataExtractor = userDataExtractor;
     }
 
-    @GetMapping(GatewayConstants.LOGIN_PATH)
+    @Override
     public ResponseEntity<Void> login() {
         return ResponseEntity.status(HttpStatus.FOUND).header("Location", loginRedirectUrl).build();
     }
 
-    @GetMapping(GatewayConstants.GATEWAY_PATH + "/auth-check")
+    @Override
     public ResponseEntity<Void> authCheck() {
         return ResponseEntity.ok().build();
     }

@@ -1,0 +1,52 @@
+openapi: 3.0.1
+info:
+  title: Auth Gateway
+  version: 1.0.0
+
+tags:
+  - name: gateway
+    description: "API endpoints for the authentication gateway"
+
+servers:
+  - url: '{protocol}://{environment}:{port}'
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      environment:
+        enum:
+          - localhost # Docker-compose setup
+        default: localhost # Development
+      port:
+        enum:
+          - "8080"
+        default: "8080"
+
+paths:
+  /gateway/login:
+    get:
+      tags:
+        - gateway
+      summary: Redirect to configured login provider
+      operationId: login
+      responses:
+        '302':
+          description: Redirect to login provider URL
+          headers:
+            Location:
+              description: URL for the login provider
+              schema:
+                type: string
+                format: uri
+  /gateway/auth-check:
+    get:
+      tags:
+        - gateway
+      summary: Verify that authentication is valid
+      operationId: authCheck
+      responses:
+        '200':
+          description: Authentication is valid
+
