@@ -33,8 +33,6 @@ De følgende tabeller indeholder miljø-variable og dertilhørende beskrivelser.
 | ITUKT_GATEWAY_ALLOWEDORIGINS            | En liste af URL’er/origins som skal tillades af CORS.                                                                                                                                          | Nej      |
 | ITUKT_GATEWAY_API_URL                   | URL på det api der skal forwardes til.                                                                                                                                                         | Ja       |
 | ITUKT_GATEWAY_LOGINREDIRECTURL          | URL der skal forwardes til efter succesfuldt login.                                                                                                                                            | Ja       |
-| ITUKT_GATEWAY_USERIDATTRIBUTE           | Navnet på den SAML assertion attribut der skal sættes som bruger id på kaldet til api'et                                                                                                       | Ja       |
-| ITUKT_GATEWAY_USERROLEATTRIBUTE         | Navnet på den SAML assertion attribut der skal valideres mod ITUKT_GATEWAY_REQUIREDUSERROLE_FROM_SEB                                                                                           | Ja       |
 | ITUKT_GATEWAY_REQUIREDUSERROLE_FROM_SEB | Det påkrævede rolle-claim på brugeren der logger ind via SEB                                                                                                                                   | Ja       |
 
 ## OIOSAML servlet variable

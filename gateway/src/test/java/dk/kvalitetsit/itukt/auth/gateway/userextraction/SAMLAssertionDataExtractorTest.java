@@ -19,6 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class SAMLAssertionDataExtractorTest {
+    private static final String NAME_ATTRIBUTE = "https://data.gov.dk/model/core/eid/fullName";
+    private static final String EMAIL_ATTRIBUTE = "https://data.gov.dk/model/core/eid/email";
+    private static final String ROLE_ATTRIBUTE = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role";
+
     @Mock
     private SessionHandler sessionHandler;
 
@@ -26,82 +30,87 @@ class SAMLAssertionDataExtractorTest {
     private HttpSession httpSession;
 
     @Test
-    void extractUserID_WithNoAssertion_ThrowsForbiddenException() {
-        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession, "test-id", "test-role");
+    void extractUserData_WithNoAssertion_ThrowsForbiddenException() {
+        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession);
         Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(null);
 
-        var e = assertThrows(ResponseStatusException.class, samlAssertionUserIDExtractor::extractUserID);
+        var e = assertThrows(ResponseStatusException.class, samlAssertionUserIDExtractor::extractUserData);
         assertEquals(HttpStatus.FORBIDDEN, e.getStatus());
     }
 
     @Test
-    void extractUserID_WithoutRequiredAttributeOnAssertion_ThrowsForbiddenException() {
-        String userIdAttribute = "test-attribute";
-        String userRoleAttribute = "role-test-attribute";
-        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession, userIdAttribute, userRoleAttribute);
+    void extractUserData_WithoutNameAttributeOnAssertion_ThrowsForbiddenException() {
+        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession);
         var assertion = Mockito.mock(AssertionWrapper.class);
         Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(assertion);
-        Mockito.when(assertion.getAttributeValues()).thenReturn(Map.of("another-attribute", "value"));
+        Mockito.when(assertion.getAttributeValues())
+                .thenReturn(Map.of(
+                        EMAIL_ATTRIBUTE, "email",
+                        ROLE_ATTRIBUTE, "role"));
 
-        var e = assertThrows(ResponseStatusException.class, samlAssertionUserIDExtractor::extractUserID);
+        var e = assertThrows(ResponseStatusException.class, samlAssertionUserIDExtractor::extractUserData);
         assertEquals(HttpStatus.FORBIDDEN, e.getStatus());
     }
 
     @Test
-    void extractUserID_WithRequiredAttributeOnAssertion_ReturnsAttributeValue() {
-        String userIdAttribute = "test-attribute";
-        String userRoleAttribute = "role-test-attribute";
-        String userIdValue = "test-user";
-        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession, userIdAttribute, userRoleAttribute);
+    void extractUserData_WithoutEmailAttributeOnAssertion_ThrowsForbiddenException() {
+        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession);
         var assertion = Mockito.mock(AssertionWrapper.class);
         Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(assertion);
-        Mockito.when(assertion.getAttributeValues()).thenReturn(Map.of(userIdAttribute, userIdValue, "another-attribute", "value"));
+        Mockito.when(assertion.getAttributeValues())
+                .thenReturn(Map.of(
+                        NAME_ATTRIBUTE, "name",
+                        ROLE_ATTRIBUTE, "role"));
 
-        var result = samlAssertionUserIDExtractor.extractUserID();
-
-        assertEquals(userIdValue, result);
-    }
-
-    @Test
-    void extractUserRole_WithoutRequiredAttributeOnAssertion_ThrowsForbiddenException() {
-        String userIdAttribute = "test-attribute";
-        String userRoleAttribute = "role-test-attribute";
-        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession, userIdAttribute, userRoleAttribute);
-        var assertion = Mockito.mock(AssertionWrapper.class);
-        Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(assertion);
-        Mockito.when(assertion.getAttributeValues()).thenReturn(Map.of("another-attribute", "value"));
-
-        var e = assertThrows(ResponseStatusException.class, samlAssertionUserIDExtractor::extractUserRole);
+        var e = assertThrows(ResponseStatusException.class, samlAssertionUserIDExtractor::extractUserData);
         assertEquals(HttpStatus.FORBIDDEN, e.getStatus());
     }
 
     @Test
-    void extractUserRole_WithRequiredAttributeOnAssertion_ReturnsAttributeValue() {
-        String userIdAttribute = "test-attribute";
-        String userRoleAttribute = "role-test-attribute";
-        String userRoleValue = "test-role";
-        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession, userIdAttribute, userRoleAttribute);
+    void extractUserData_WithoutRoleAttributeOnAssertion_ThrowsForbiddenException() {
+        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession);
         var assertion = Mockito.mock(AssertionWrapper.class);
         Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(assertion);
-        Mockito.when(assertion.getAttributeValues()).thenReturn(Map.of(userRoleAttribute, userRoleValue + "_0_3", "another-attribute", "value"));
+        Mockito.when(assertion.getAttributeValues())
+                .thenReturn(Map.of(
+                        NAME_ATTRIBUTE, "name",
+                        ROLE_ATTRIBUTE, "role"));
 
-        var result = samlAssertionUserIDExtractor.extractUserRole();
-
-        assertEquals(userRoleValue, result);
+        var e = assertThrows(ResponseStatusException.class, samlAssertionUserIDExtractor::extractUserData);
+        assertEquals(HttpStatus.FORBIDDEN, e.getStatus());
     }
 
     @Test
-    void extractUserRole_WithRequiredAttributeOnAssertionWithoutRoleSuffix_ReturnsAttributeValue() {
-        String userIdAttribute = "test-attribute";
-        String userRoleAttribute = "role-test-attribute";
-        String userRoleValue = "test-role";
-        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession, userIdAttribute, userRoleAttribute);
+    void extractUserID_WithAllRequiredAttributesOnAssertion_ReturnsUserData() {
+        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession);
         var assertion = Mockito.mock(AssertionWrapper.class);
         Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(assertion);
-        Mockito.when(assertion.getAttributeValues()).thenReturn(Map.of(userRoleAttribute, userRoleValue, "another-attribute", "value"));
+        var userData = new UserData("name", "email", "readonly");
+        Mockito.when(assertion.getAttributeValues())
+                .thenReturn(Map.of(
+                        NAME_ATTRIBUTE, userData.name(),
+                        EMAIL_ATTRIBUTE, userData.email(),
+                        ROLE_ATTRIBUTE, userData.role() + "_0_3"));
 
-        var result = samlAssertionUserIDExtractor.extractUserRole();
+        var result = samlAssertionUserIDExtractor.extractUserData();
 
-        assertEquals(userRoleValue, result);
+        assertEquals(userData, result);
+    }
+
+    @Test
+    void extractUserData_WithoutRoleSuffix_ReturnsUserData() {
+        var samlAssertionUserIDExtractor = new SAMLAssertionDataExtractor(sessionHandler, httpSession);
+        var assertion = Mockito.mock(AssertionWrapper.class);
+        Mockito.when(sessionHandler.getAssertion(httpSession)).thenReturn(assertion);
+        var userData = new UserData("jens", "jens@test.dk", "admin");
+        Mockito.when(assertion.getAttributeValues())
+                .thenReturn(Map.of(
+                        NAME_ATTRIBUTE, userData.name(),
+                        EMAIL_ATTRIBUTE, userData.email(),
+                        ROLE_ATTRIBUTE, userData.role()));
+
+        var result = samlAssertionUserIDExtractor.extractUserData();
+
+        assertEquals(userData, result);
     }
 }

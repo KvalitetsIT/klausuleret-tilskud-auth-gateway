@@ -1,5 +1,6 @@
 package dk.kvalitetsit.itukt.auth.gateway;
 
+import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserData;
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserDataExtractor;
 import org.openapitools.api.GatewayApi;
 import org.openapitools.model.User;
@@ -38,20 +39,21 @@ public class GatewayController implements GatewayApi {
 
     @Override
     public ResponseEntity<User> getUser() {
-        var user = new User(userDataExtractor.extractUserName(), userDataExtractor.extractUserEmail());
+        UserData userData = userDataExtractor.extractUserData();
+        var user = new User(userData.name(), userData.email());
         return ResponseEntity.ok(user);
     }
 
     @RequestMapping(GatewayConstants.API_PATH + "/**")
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
-        var userRole = userDataExtractor.extractUserRole();
-        if(!userRole.equals(requiredUserRoleFromSeb))
+        var userData = userDataExtractor.extractUserData();
+        if(!userData.role().equals(requiredUserRoleFromSeb))
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have the required SEB role claim '" + requiredUserRoleFromSeb + "'");
 
         String apiUri = constructApiUrl(proxy, request);
         var api = proxy
                 .uri(apiUri)
-                .header("User-ID", userDataExtractor.extractUserID())
+                .header("User-ID", userData.email())
                 .header("Host", apiUrl.getHost());
 
         var method = getHttpMethod(request);

@@ -75,9 +75,11 @@ public class GatewayIT extends BaseTest {
     void getUser_ReturnsMockedAuthUser() throws ApiException {
         User user = gatewayApi.getUser();
 
-        var userDataExtractor = new GatewayBeanRegistration(null).mockedUserIDExtractor();
-        assertEquals(userDataExtractor.extractUserName(), user.getName());
-        assertEquals(userDataExtractor.extractUserEmail(), user.getEmail());
+        var userData = new GatewayBeanRegistration(null).mockedUserIDExtractor().extractUserData();
+        User expectedUser = new User()
+                .name(userData.name())
+                .email(userData.email());
+        assertEquals(expectedUser, user);
     }
 
     @Override
