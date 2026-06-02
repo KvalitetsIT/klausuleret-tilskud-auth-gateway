@@ -2,6 +2,7 @@ package dk.kvalitetsit.itukt.auth.gateway;
 
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserDataExtractor;
 import org.openapitools.api.GatewayApi;
+import org.openapitools.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.mvc.ProxyExchange;
@@ -36,8 +37,9 @@ public class GatewayController implements GatewayApi {
     }
 
     @Override
-    public ResponseEntity<Void> authCheck() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<User> getUser() {
+        var user = new User(userDataExtractor.extractUserName(), userDataExtractor.extractUserEmail());
+        return ResponseEntity.ok(user);
     }
 
     @RequestMapping(GatewayConstants.API_PATH + "/**")

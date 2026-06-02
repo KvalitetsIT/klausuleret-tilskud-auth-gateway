@@ -11,6 +11,9 @@ import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 public class SAMLAssertionDataExtractor implements UserDataExtractor {
+    private static final String NAME_ATTRIBUTE = "https://data.gov.dk/model/core/eid/fullName";
+    private static final String EMAIL_ATTRIBUTE = "https://data.gov.dk/model/core/eid/email";
+
     private final Logger logger = LoggerFactory.getLogger(SAMLAssertionDataExtractor.class);
     private final SessionHandler sessionHandler;
     private final HttpSession httpSession;
@@ -36,6 +39,18 @@ public class SAMLAssertionDataExtractor implements UserDataExtractor {
                 .orElseThrow(() -> createForbiddenException("Missing attribute in SAML assertion: " + userRoleAttribute));
         var roleNameIndex = roleClaim.indexOf("_");
         return roleNameIndex == -1 ? roleClaim : roleClaim.substring(0, roleNameIndex);
+    }
+
+    @Override
+    public String extractUserName() {
+        return Optional.ofNullable(getAssertion().getAttributeValues().get(NAME_ATTRIBUTE))
+                .orElse("");
+    }
+
+    @Override
+    public String extractUserEmail() {
+        return Optional.ofNullable(getAssertion().getAttributeValues().get(EMAIL_ATTRIBUTE))
+                .orElse("");
     }
 
     private AssertionWrapper getAssertion() {

@@ -41,6 +41,16 @@ public class GatewayBeanRegistration {
             public String extractUserRole() {
                 return "testRole";
             }
+
+            @Override
+            public String extractUserName() {
+                return "Test";
+            }
+
+            @Override
+            public String extractUserEmail() {
+                return "test@test.dk";
+            }
         };
     }
 

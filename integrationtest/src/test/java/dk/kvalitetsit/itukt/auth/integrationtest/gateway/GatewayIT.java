@@ -1,11 +1,14 @@
 package dk.kvalitetsit.itukt.auth.integrationtest.gateway;
 
+import dk.kvalitetsit.itukt.auth.gateway.GatewayBeanRegistration;
 import dk.kvalitetsit.itukt.auth.gateway.GatewayConstants;
+import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserDataExtractor;
 import dk.kvalitetsit.itukt.auth.integrationtest.BaseTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.api.GatewayApi;
+import org.openapitools.client.model.User;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
@@ -69,8 +72,12 @@ public class GatewayIT extends BaseTest {
     }
 
     @Test
-    void authCheck_Succeeds() {
-        assertDoesNotThrow(() -> gatewayApi.authCheck());
+    void getUser_ReturnsMockedAuthUser() throws ApiException {
+        User user = gatewayApi.getUser();
+
+        var userDataExtractor = new GatewayBeanRegistration(null).mockedUserIDExtractor();
+        assertEquals(userDataExtractor.extractUserName(), user.getName());
+        assertEquals(userDataExtractor.extractUserEmail(), user.getEmail());
     }
 
     @Override

@@ -40,13 +40,30 @@ paths:
               schema:
                 type: string
                 format: uri
-  /gateway/auth-check:
+  /gateway/user:
     get:
       tags:
         - gateway
-      summary: Verify that authentication is valid
-      operationId: authCheck
+      summary: Get details about the authenticated user
+      operationId: getUser
       responses:
         '200':
-          description: Authentication is valid
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+        email:
+          type: string
 
