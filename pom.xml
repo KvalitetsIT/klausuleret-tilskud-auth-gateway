@@ -9,6 +9,7 @@
         <module>application</module>
         <module>gateway</module>
         <module>integrationtest</module>
+        <module>documentation</module>
     </modules>
 
     <groupId>dk.kvalitetsit.klausuleret-tilskud-auth-gateway</groupId>
@@ -50,6 +51,19 @@
                 <groupId>dk.kvalitetsit.klausuleret-tilskud-auth-gateway</groupId>
                 <artifactId>application</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dk.kvalitetsit.klausuleret-tilskud-auth-gateway</groupId>
+                <artifactId>documentation</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dk.kvalitetsit.klausuleret-tilskud-auth-gateway</groupId>
+                <artifactId>documentation</artifactId>
+                <version>${project.version}</version>
+                <type>test-jar</type>
             </dependency>
 
             <dependency>
@@ -105,6 +119,32 @@
                 <artifactId>junit-jupiter</artifactId>
                 <version>1.21.4</version>
                 <scope>test</scope>
+            </dependency>
+
+            <!-- Jackson Databind nullable -->
+            <dependency>
+                <groupId>org.openapitools</groupId>
+                <artifactId>jackson-databind-nullable</artifactId>
+                <version>0.2.9</version>
+            </dependency>
+
+            <!-- Swagger annotations -->
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>2.2.50</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>logging-interceptor</artifactId>
+                <version>4.9.3</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>3.0.2</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

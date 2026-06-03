@@ -1,6 +1,8 @@
 package dk.kvalitetsit.itukt.auth.integrationtest;
 
+import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.*;
+import org.openapitools.client.ApiClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +15,8 @@ public abstract class BaseTest {
     private static final Logger logger = LoggerFactory.getLogger(BaseTest.class);
 
     protected Component component;
+    protected ApiClient client;
+    protected String url;
 
     @BeforeAll
     void setupApp() {
@@ -24,6 +28,13 @@ public abstract class BaseTest {
 
         logger.info("Starting component");
         component.start();
+
+        // Configure API client
+        var httpClient = new OkHttpClient.Builder()
+                .followRedirects(false)
+                .build();
+        url = String.format("http://%s:%s", component.getHost(), component.getPort());
+        client = new ApiClient(httpClient).setBasePath(url);
     }
 
     @AfterAll

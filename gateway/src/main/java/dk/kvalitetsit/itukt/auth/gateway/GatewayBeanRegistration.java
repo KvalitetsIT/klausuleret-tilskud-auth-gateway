@@ -3,6 +3,7 @@ package dk.kvalitetsit.itukt.auth.gateway;
 import dk.gov.oio.saml.service.OIOSAML3Service;
 import dk.gov.oio.saml.util.InternalException;
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.SAMLAssertionDataExtractor;
+import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserData;
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserDataExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,17 +32,7 @@ public class GatewayBeanRegistration {
     @Profile("without-oiosaml")
     public UserDataExtractor mockedUserIDExtractor() {
         logger.info("Registering mocked UserIDExtractor");
-        return new UserDataExtractor() {
-            @Override
-            public String extractUserID() {
-                return "mocked-user";
-            }
-
-            @Override
-            public String extractUserRole() {
-                return "testRole";
-            }
-        };
+        return () -> new UserData("Test", "test@test.dk", "testRole");
     }
 
     @Bean
@@ -50,7 +41,7 @@ public class GatewayBeanRegistration {
     public UserDataExtractor samlAssertionDataExtractor(HttpSession httpSession) throws InternalException {
         logger.info("Registering SAMLAssertionDataExtractor");
         var sessionHandler = OIOSAML3Service.getSessionHandlerFactory().getHandler();
-        return new SAMLAssertionDataExtractor(sessionHandler, httpSession, configuration.userIdAttribute(), configuration.userRoleAttribute());
+        return new SAMLAssertionDataExtractor(sessionHandler, httpSession);
     }
 
     @Bean

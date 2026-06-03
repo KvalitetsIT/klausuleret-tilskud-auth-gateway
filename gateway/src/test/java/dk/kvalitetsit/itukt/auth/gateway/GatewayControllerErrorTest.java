@@ -1,5 +1,6 @@
 package dk.kvalitetsit.itukt.auth.gateway;
 
+import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserData;
 import dk.kvalitetsit.itukt.auth.gateway.userextraction.UserDataExtractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,14 +36,14 @@ public class GatewayControllerErrorTest {
 
     @BeforeEach
     void setUp() {
-        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), "", "", REQUIRED_USER_ROLE, LOGIN_REDIRECT_URL, List.of());
+        var gatewayConf = new GatewayConfiguration(new GatewayConfiguration.ApiConfiguration(API_URL), REQUIRED_USER_ROLE, LOGIN_REDIRECT_URL, List.of());
         gatewayController = new GatewayController(gatewayConf, userDataExtractor);
     }
 
     @Test
     void proxy_InvalidUserRole() {
         String userRole = "invalidRole_0_3"; // All user roles from SEB are postfixed with _[0-9]_[0-9]
-        Mockito.when(userDataExtractor.extractUserRole()).thenReturn(userRole);
+        Mockito.when(userDataExtractor.extractUserData()).thenReturn(new UserData("", "", userRole));
         assertThrows(ResponseStatusException.class, () -> gatewayController.proxy(proxyExchange, httpRequest));
     }
 }
