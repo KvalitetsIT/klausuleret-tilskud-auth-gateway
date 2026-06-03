@@ -34,3 +34,6 @@ services:
       - 5005:5005
     volumes:
       - ./configuration/keystore.p12:/app/configuration/keystore.p12
+    depends_on:
+      api-mock:
+        condition: service_healthy
