@@ -53,6 +53,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+  /gateway/auth-check:
+    get:
+      tags:
+        - gateway
+      summary: Check if the user is authenticated and has the required role
+      operationId: authCheck
+      responses:
+        '200':
+          description: Ok
+        '403':
+          description: Forbidden
 
 components:
   schemas:
