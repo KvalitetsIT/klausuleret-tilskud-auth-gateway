@@ -82,6 +82,11 @@ public class GatewayIT extends BaseTest {
         assertEquals(expectedUser, user);
     }
 
+    @Test
+    void authCheck_Succeeds() throws ApiException {
+        gatewayApi.authCheck();
+    }
+
     @Override
     protected boolean withOioSaml() {
         return false;

@@ -38,6 +38,13 @@ public class GatewayController implements GatewayApi {
     }
 
     @Override
+    public ResponseEntity<Void> authCheck() {
+        UserData userData = userDataExtractor.extractUserData();
+        validateUserRole(userData);
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
     public ResponseEntity<User> getUser() {
         UserData userData = userDataExtractor.extractUserData();
         var user = new User(userData.name(), userData.email());
@@ -47,8 +54,7 @@ public class GatewayController implements GatewayApi {
     @RequestMapping(GatewayConstants.API_PATH + "/**")
     public ResponseEntity<?> proxy(ProxyExchange<byte[]> proxy, HttpServletRequest request) {
         var userData = userDataExtractor.extractUserData();
-        if(!userData.role().equals(requiredUserRoleFromSeb))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have the required SEB role claim '" + requiredUserRoleFromSeb + "'");
+        validateUserRole(userData);
 
         String apiUri = constructApiUrl(proxy, request);
         var api = proxy
@@ -73,6 +79,11 @@ public class GatewayController implements GatewayApi {
                 .status(response.getStatusCode())
                 .header("Content-Type", response.getHeaders().getFirst("Content-Type"))
                 .body(response.getBody());
+    }
+
+    private void validateUserRole(UserData user) {
+        if(!user.role().equals(requiredUserRoleFromSeb))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User does not have the required SEB role claim '" + requiredUserRoleFromSeb + "'");
     }
 
     private String constructApiUrl(ProxyExchange<byte[]> proxy, HttpServletRequest request) {

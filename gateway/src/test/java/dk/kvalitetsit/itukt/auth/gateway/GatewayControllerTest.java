@@ -13,6 +13,7 @@ import org.springframework.cloud.gateway.mvc.ProxyExchange;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -20,6 +21,7 @@ import java.net.URL;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class GatewayControllerTest {
@@ -206,8 +208,8 @@ class GatewayControllerTest {
     }
 
     @Test
-    void getUser() {
-        var userData = new UserData("test-name", "test-email", REQUIRED_USER_ROLE);
+    void getUser_WhenUserHaveAnyRole_ReturnsUser() {
+        var userData = new UserData("test-name", "test-email", "some-role");
         Mockito.when(userDataExtractor.extractUserData()).thenReturn(userData);
 
         var response = gatewayController.getUser();
@@ -215,6 +217,26 @@ class GatewayControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         var expectedUser = new User(userData.name(), userData.email());
         assertEquals(expectedUser, response.getBody());
+    }
+
+    @Test
+    void authCheck_WhenUserHaveRequiredRole_ReturnsOk() {
+        var userData = new UserData("test-name", "test-email", REQUIRED_USER_ROLE);
+        Mockito.when(userDataExtractor.extractUserData()).thenReturn(userData);
+
+        var response = gatewayController.authCheck();
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void authCheck_WhenUserDoesNotHaveRequiredRole_ReturnsForbidden() {
+        var userData = new UserData("test-name", "test-email", "invalid-role");
+        Mockito.when(userDataExtractor.extractUserData()).thenReturn(userData);
+
+        var e = assertThrows(ResponseStatusException.class, () -> gatewayController.authCheck());
+
+        assertEquals(HttpStatus.FORBIDDEN, e.getStatus());
     }
 
     public static URL createURL(String url) {
