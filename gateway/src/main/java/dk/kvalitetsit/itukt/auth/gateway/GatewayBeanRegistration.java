@@ -32,7 +32,7 @@ public class GatewayBeanRegistration {
     @Profile("without-oiosaml")
     public UserDataExtractor mockedUserIDExtractor() {
         logger.info("Registering mocked UserIDExtractor");
-        return () -> new UserData("Test", "test@test.dk", "testRole");
+        return () -> new UserData("Test", "test@test.dk", "iktAdmin");
     }
 
     @Bean
