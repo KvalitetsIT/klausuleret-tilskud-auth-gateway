@@ -97,7 +97,7 @@
             <dependency>
                 <groupId>org.mock-server</groupId>
                 <artifactId>mockserver</artifactId>
-                <version>3.12</version>
+                <version>9.2.0</version>
                 <scope>test</scope>
             </dependency>
 
